@@ -52,6 +52,7 @@ P(X = k) = nCk * (p^k)(1-p)^(n-k)
 E(X) = n*p
 Var(X) = np(1-p)
 
-AIM : Use Binomial distribution in situations where probability of success is known and the question to be answered is "How many of those n trials will results in a success"
+AIM : Use Binomial distribution in situations where probability of success is known and the question to be answered is "How many of those n trials will result in a success".
+It is also useful to test for statistical significance by finding out any discrepancies in the underlying distrubution of the physical experiment.
 
 3. Geometric Distribution
