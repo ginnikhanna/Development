@@ -22,6 +22,9 @@ Var[X] = p(1-p)
 Bernoulli distribution is the simplest distribution which forms the basis for a lot of other distributions, the next one which we
 will study is the Binomial Distribution.
 
+
+AIM : Use the Bernoulli distribution in situation where only one trial is concerned and the outcome is either 1 or 0.
+
 2. Binomial Distribution
 The Binomial Distribution is actually repetition of several independent events with a Bernoulli distribution. This distribution has its significance in
 assessing the probabilites of repeated independent trials. The PDF of the process modelled with binomial distributin can gives us the abilitiy to assess the
@@ -44,4 +47,11 @@ It has two requirements:
 2. The probability of success is same in all the trials.
 
 For a Binomial distribution with 'successes' from 'n' Bernoulli experiments, the probability that 'k' trials result is success is:
-P(X = k) = nCk * (p^^)(1-p)^(n-k)
+P(X = k) = nCk * (p^k)(1-p)^(n-k)
+
+E(X) = n*p
+Var(X) = np(1-p)
+
+AIM : Use Binomial distribution in situations where probability of success is known and the question to be answered is "How many of those n trials will results in a success"
+
+3. Geometric Distribution
