@@ -41,7 +41,7 @@ def plot_distribution_bernoulli(p_success, p_failure):
 
 
 
-def plot_distribution_binomial(n, p_list):
+def plot_distribution_binomial(n : int, p_list):
 
     p = figure(plot_width=600,
                plot_height=600,
@@ -49,11 +49,11 @@ def plot_distribution_binomial(n, p_list):
                x_axis_label='Random Variable Value (X)',
                y_axis_label='Probability Density Function P(X = x)')
 
-    left_edges_list = np.arange(0.0, len(n) - 1, 0.5)
-    right_edges_list = np.arange(0.5, len(n) + 0.5, 0.5)
-    x_ticks = n
+    left_edges_list = np.arange(0.0, n - 1, 0.5)
+    right_edges_list = np.arange(0.5, n + 0.5, 0.5)
+    n_list = np.arange(n)
 
-    df_pdf = pd.DataFrame(list(zip(n, p_list, left_edges_list, right_edges_list, n)),
+    df_pdf = pd.DataFrame(list(zip(n_list, p_list, left_edges_list, right_edges_list, n_list)),
                       columns=['Number of Successeful Trials',
                                'P(Event)',
                                'edges_left',
@@ -69,9 +69,9 @@ def plot_distribution_binomial(n, p_list):
            fill_color='red', line_color='black')
 
   #  p.xaxis.ticker = [0.25, 0.75, 1.25, 1.75, 2.25, 2.75]
-    x_ticks = np.arange(0.25, len(n)/2 +  0.25, 0.5)
+    x_ticks = np.arange(0.25, n/2 +  0.25, 0.5)
 
     p.axis.ticker = x_ticks
-    p.axis.major_label_overrides = {key : str(value) for (key, value) in zip(x_ticks, n)}
+    p.axis.major_label_overrides = {key : str(value) for (key, value) in zip(x_ticks, np.arange(n))}
 
     return p
