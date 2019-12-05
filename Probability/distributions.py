@@ -45,4 +45,4 @@ def get_mean_of_distribution(distribution : Distribution, parameters : (Bernoull
         mean = parameters.number_of_trials * parameters.probability_of_success
         variance = parameters.number_of_trials * parameters.probability_of_success * (1 - parameters.probability_of_success)
 
-        return mean, variabnce
+        return mean, variance
