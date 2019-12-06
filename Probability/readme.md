@@ -74,4 +74,10 @@ It has the potential to answer questions such as:
 
 E(X) = 1/p
 Var(X) = (1-p)/p^^2
+ If you look at the probability distribution of X, it is seen that the probability of the failures on n^^h trial reduces, eventually going towards zero as the number of trials are increasing.
 
+
+4.  Multinomial Distribution
+
+A multinomial distribution is the generalization of a binomial distribution. Here each outcomes is a binomial variable. It is used to model provesses where there are 'n' independent trials and each trial results in onf of the 'k' mutually exclusis outcomes.
+The probability that the random variable takes 'k' such values
