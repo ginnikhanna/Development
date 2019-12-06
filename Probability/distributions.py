@@ -7,13 +7,16 @@ from collections import namedtuple
 class Distribution(Enum):
     bernoulli = 1
     binomial = 2
+    geometric = 3
 
 
 
 BernoulliDistribution = namedtuple('BernoulliDistribution', ['probability_of_success', 'random_variable_value'])
 BinomialDistribution = namedtuple('BinomialDistribution', ['number_of_trials', 'number_of_success_trials', 'probability_of_success'])
+GeometricDistribution = namedtuple('GeometricDistribution', ['number_of_failures', 'probability_of_success'])
 
-def get_probability_of_occurence(distribution:Distribution, parameters :(BernoulliDistribution, BinomialDistribution)):
+
+def get_probability_of_occurence(distribution:Distribution, parameters :(BernoulliDistribution, BinomialDistribution, GeometricDistribution)):
 
     ''' Let us say there is a random variable X which can only take two values, either 0 or 1.
     The probability distribution of such a random variable is modelled using the Bernoulli distribution with probabily p and is written as
@@ -32,8 +35,12 @@ def get_probability_of_occurence(distribution:Distribution, parameters :(Bernoul
 
         return pdf
 
+    if distribution == Distribution.geometric:
+        pdf = pow((1 - parameters.probability_of_success), parameters.number_of_failures - 1) * parameters.probability_of_success
+        return pdf
 
-def get_mean_of_distribution(distribution : Distribution, parameters : (BernoulliDistribution, BinomialDistribution)):
+
+def get_mean_and_variance_of_distribution(distribution : Distribution, parameters : (BernoulliDistribution, BinomialDistribution)):
 
     if distribution == Distribution.bernoulli:
         mean = parameters.probability_of_success
@@ -44,5 +51,9 @@ def get_mean_of_distribution(distribution : Distribution, parameters : (Bernoull
     if distribution == Distribution.binomial:
         mean = parameters.number_of_trials * parameters.probability_of_success
         variance = parameters.number_of_trials * parameters.probability_of_success * (1 - parameters.probability_of_success)
+        return mean, variance
 
+    if distribution == Distribution.geometric:
+        mean = 1/ parameters.probability_of_success
+        variance = (1 - parameters.probability_of_success)/(pow(parameters.probability_of_success, 2))
         return mean, variance

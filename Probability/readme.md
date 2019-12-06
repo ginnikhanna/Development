@@ -6,10 +6,10 @@ The repository consists of code for basic probability ditributions
 Such a distribution is useful for modelling outcomes of processes which ask the question of Success of Failure.
 The process has only two outcomes. This can be then used for answering the following questions :
 
-A. Is the kid going to be a boy or a girl
-B. Does the man have cancer or not
-C. Is this a cat or a dog ?
-D. Is the transmitted bit 0 or 1
+1. Is the kid going to be a boy or a girl
+2. Does the man have cancer or not
+3. Is this a cat or a dog ?
+4. Is the transmitted bit 0 or 1
 
 The Bernoulli distribution needs only one paramter, called the probability of success, which is denoted by 'p'.
 
@@ -32,14 +32,14 @@ probability of a range of potential results. It has specific application in risk
 
 It has the potential to answer questions such as :
 
-A. Is the coin fair or not ? In this case, actually the coin can be flipped multiple times and the probability of occurence of heads on each flip can be recorded. If the outcome is anything other than
+1. Is the coin fair or not ? In this case, actually the coin can be flipped multiple times and the probability of occurence of heads on each flip can be recorded. If the outcome is anything other than
 close to 0 for a coin flipped 1000 times, it can be safely concluded that the coin is unfair.
 
-B. Is the team going to win 5 games in a row ?
+2. Is the team going to win 5 games in a row ?
 
-C. Can the couple get 5 boys in a row ?
+3. Can the couple get 5 boys in a row ?
 
-D. In a manufacturing firm, what is the probability that all the 100 manufactured bulbs are defective.
+4. In a manufacturing firm, what is the probability that all the 100 manufactured bulbs are defective.
 
 It has two requirements:
 
@@ -58,4 +58,20 @@ Actually if you make 'n' very high, the binomial distribution approaches the nor
 
 
 3. Geometric Distribution
-git
+
+The geometric distribution is actually a binomial distribution but it specifically models the probability of exactly 'k' failures before the first success occurs.
+
+P(X=k) = (1-p)^k * p
+
+It has the potential to answer questions such as:
+
+1. How many times should be coin be flipped before the first head comes ?
+2. How many girls will the couple conceive before a boy ?
+3. How many times will a team lose before they get a win ?
+4. How many times should a dice be rolled before a 1 comes ?
+5. For time management to complete a task before time runs out.
+6. For a company, to reach success before the profit outweighs the cost the company put in.
+
+E(X) = 1/p
+Var(X) = (1-p)/p^^2
+
