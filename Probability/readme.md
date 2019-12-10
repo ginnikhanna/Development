@@ -80,4 +80,9 @@ Var(X) = (1-p)/p^^2
 4.  Multinomial Distribution
 
 A multinomial distribution is the generalization of a binomial distribution. Here each outcomes is a binomial variable. It is used to model provesses where there are 'n' independent trials and each trial results in onf of the 'k' mutually exclusis outcomes.
-The probability that the random variable takes 'k' such values
+The probability that the random variable takes 'k' such values is then given as :
+
+P(x1, x2, ... xk) = n!/(x1! * x2! * ... xk!) * p1^(x1) * p1^(x2) * ... pk^(xk)
+
+E(x1, x2, ... xk) = n*p_i for i = 1, 2, 3...k
+Var(x1, x2, ... xk) = n*p_i(1-p_i)
