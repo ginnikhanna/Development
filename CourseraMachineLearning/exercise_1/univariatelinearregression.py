@@ -11,10 +11,10 @@ from bokeh.models import ColumnDataSource, HoverTool
 
 FLT_EPSILON = 1e-4
 
-# Load data
+# LOAD DATA
 df = pd.read_csv('ex1data1.csv')
 
-# Plot data
+# PLOT DATA
 df_src = ColumnDataSource(df)
 
 p = figure(plot_width=600,
@@ -28,18 +28,35 @@ p.circle(x = 'Population',
          source = df_src)
 #show(p)
 
-#COMPUTE COST FUNCTION
-#Initial settings
+# COMPUTE COST FUNCTION
 X = df['Population'].to_numpy()
-ones = np.ones_like(X)
-
-#Making column of ones for theta_0
-X = np.vstack((np.ones_like(X), X))
-
-theta =  np.zeros((2,1))
 y = df['Profit'].to_numpy()
-number_of_training_samples = len(df['Population'])
+ones = np.ones_like(X)
+X = np.vstack((np.ones_like(X), X))
+theta =  np.zeros((2,1))
 
 #TODO: put a unit test here
-J_theta = np.mean((theta.transpose().dot(X) - y)**2)/(2)
+J_theta = util.compute_univariate_cost_function(X, theta, y)
 assert J_theta - 32.0727 < FLT_EPSILON
+
+theta = np.array((-1,2))
+J_theta = util.compute_univariate_cost_function(X, theta, y)
+assert J_theta - 54.2425 < FLT_EPSILON
+
+# GRADIENT DESCENT
+theta = np.zeros((2,1))
+number_of_iterations = 1500
+alpha = 0.01
+
+theta, J = util.gradient_descent_univariate(X, theta, y, number_of_iterations, alpha)
+print(f'Final theta {theta} with cost function {J}')
+
+#PLOT FITTED DATA TO THE LINE
+predicted_profit = theta.transpose().dot(X)
+df['Predicted_Profit'] = pd.Series(predicted_profit[0], index=df.index)
+
+df_src = ColumnDataSource(df)
+p.line(x = 'Population',
+         y = 'Predicted_Profit',
+         source = df_src)
+show(p)
