@@ -20,12 +20,15 @@ df_src = ColumnDataSource(df)
 p = figure(plot_width=600,
            plot_height=600,
            title=' Profit vs Populations',
-           x_axis_label='Population',
-           y_axis_label='Profit')
+           x_axis_label='Population in 10000s',
+           y_axis_label='Profit in 10000s $ ',
+        )
 
 p.circle(x = 'Population',
          y = 'Profit',
-         source = df_src)
+         source = df_src,
+         legend_label='Data Points'
+         )
 #show(p)
 
 # COMPUTE COST FUNCTION
@@ -57,6 +60,16 @@ df['Predicted_Profit'] = pd.Series(predicted_profit[0], index=df.index)
 
 df_src = ColumnDataSource(df)
 p.line(x = 'Population',
-         y = 'Predicted_Profit',
-         source = df_src)
+        y = 'Predicted_Profit',
+       color = 'red',
+       source = df_src,
+       legend_label ='Predicted Model'
+       )
 show(p)
+
+#PREDICT VALUES FOR POPULATION OF 35,000 and 70,000
+profit_1 = np.array([1, 3.5]).transpose().dot(theta) * 10000
+profit_2 = np.array([1, 7.0]).transpose().dot(theta) * 10000
+
+print(f'Profit for population of 35000 is {profit_1}')
+print(f'Profit for population of 70000 is {profit_2}')
