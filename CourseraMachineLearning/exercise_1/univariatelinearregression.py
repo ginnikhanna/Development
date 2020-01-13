@@ -1,4 +1,6 @@
 import csv
+import numpy as np
+
 import pandas as pd
 from CourseraMachineLearning import util
 import matplotlib.pyplot as plt
@@ -21,4 +23,20 @@ p = figure(plot_width=600,
 p.circle(x = 'Population',
          y = 'Profit',
          source = df_src)
-show(p)
+#show(p)
+
+#Initial settings
+X = df['Population'].to_numpy()
+ones = np.ones_like(X)
+
+#Making column of ones for theta_0
+X = np.vstack((np.ones_like(X), X))
+
+theta =  np.zeros((2,1))
+y = df['Profit'].to_numpy()
+number_of_training_samples = len(df['Population'])
+
+#TODO: put a unit test here
+
+J_theta = np.mean((theta.transpose().dot(X) - y)**2)/(2)
+print(J_theta)
