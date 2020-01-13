@@ -12,7 +12,6 @@ df = pd.read_csv('ex1data1.csv')
 # Plot data
 df_src = ColumnDataSource(df)
 
-
 p = figure(plot_width=600,
            plot_height=600,
            title=' Profit vs Populations',
@@ -22,6 +21,4 @@ p = figure(plot_width=600,
 p.circle(x = 'Population',
          y = 'Profit',
          source = df_src)
-
-
 show(p)
