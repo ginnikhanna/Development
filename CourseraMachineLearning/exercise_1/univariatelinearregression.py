@@ -1,5 +1,6 @@
 import csv
 import numpy as np
+import sys
 
 import pandas as pd
 from CourseraMachineLearning import util
@@ -7,6 +8,8 @@ import matplotlib.pyplot as plt
 from bokeh.io import show
 from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource, HoverTool
+
+FLT_EPSILON = 1e-4
 
 # Load data
 df = pd.read_csv('ex1data1.csv')
@@ -25,6 +28,7 @@ p.circle(x = 'Population',
          source = df_src)
 #show(p)
 
+#COMPUTE COST FUNCTION
 #Initial settings
 X = df['Population'].to_numpy()
 ones = np.ones_like(X)
@@ -37,6 +41,5 @@ y = df['Profit'].to_numpy()
 number_of_training_samples = len(df['Population'])
 
 #TODO: put a unit test here
-
 J_theta = np.mean((theta.transpose().dot(X) - y)**2)/(2)
-print(J_theta)
+assert J_theta - 32.0727 < FLT_EPSILON
