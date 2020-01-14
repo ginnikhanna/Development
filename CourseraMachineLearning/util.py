@@ -52,13 +52,16 @@ def gradient_descent_multivariate(X : np.ndarray  , theta : np.ndarray, y:np.nda
     :return:
     '''
     temp = np.zeros_like(theta)
+    J_list = []
 
     for n in range(number_of_iterations):
 
         temp = theta - alpha * X.dot((theta.transpose().dot(X) - y).transpose())/len(y)
         theta = temp
         J = compute_multivariate_cost_function(X, theta, y)
-    return theta, J
+        J_list.append(J[0][0])
+
+    return theta, J, J_list
 
 
 def normalized_features_matrix(X : np.ndarray) -> np.ndarray:
