@@ -29,15 +29,15 @@ plt.ylabel('Price in $s')
 
 
 # NORMALIZE FEATURES
-X, mu, sigma = util.normalized_features_matrix(X)
+X_norm, mu, sigma = util.normalized_features_matrix(X)
 
 #ADD THE ROW FOR 1s FOR THETA_0
 ones = np.ones((1, number_of_samples))
-X = np.vstack((ones, X))
+X_norm = np.vstack((ones, X_norm))
 
 #GET GRADIENT DESCENT
-theta = np.zeros((np.size(X, 0), 1))
-theta, J = util.gradient_descent_multivariate(X, theta, y, number_of_iterations=400, alpha = 0.1)
+theta = np.zeros((np.size(X_norm, 0), 1))
+theta, J, _ = util.gradient_descent_multivariate(X_norm, theta, y, number_of_iterations=400, alpha = 0.1)
 
 #PRICE PREDICTION FOR A 1650 ft2 3 BEDROOM HOUSE
 # DO SCALE THE FEATURES BEFORE MAKING A PREDICTION
@@ -54,3 +54,20 @@ theta_normal_equations = util.parameters_from_normal_equation(X, y)
 print(theta_normal_equations)
 price_normal_equations = theta_normal_equations[0] + theta_normal_equations[1]*(1650) + theta_normal_equations[2]*3
 print(price_normal_equations)
+
+# CALCULATE COST FUNCTION vs LEARNING RATE
+alpha_list = [0.001, 0.003, 0.01, 0.03, 0.03, 0.1, 0.3, 1, 1.3]
+theta = np.zeros((np.size(X_norm, 0), 1))
+number_of_iterations = 100
+
+for alpha in alpha_list:
+    theta, J, J_list = util.gradient_descent_multivariate(X_norm, theta, y, number_of_iterations, alpha)
+
+    plt.figure(20)
+    plt.plot(range(0, number_of_iterations, 1), J_list, label = f'alpha = {alpha}')
+
+plt.ylabel('Cost function J')
+plt.xlabel('Number of iterations')
+plt.legend()
+plt.grid()
+plt.show()
