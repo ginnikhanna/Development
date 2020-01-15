@@ -14,9 +14,9 @@ def compute_multivariate_cost_function(X : np.ndarray  , theta : np.ndarray, y:n
     ''' X : np.array with  M x N dimensions
         theta : np.array with M x 1 dimensions
         y : np.array with  1 x N dimensions
+        M : number of parameters
+        N : number of training samples
     '''
-
-
     J_theta = (theta.transpose().dot(X) - y).dot((theta.transpose().dot(X) - y).transpose())/(2*len(y))
     return J_theta
 
