@@ -6,6 +6,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from CourseraMachineLearning import util
+
 
 # LOAD DATA
 df = pd.read_csv('ex2data1.csv')
@@ -23,8 +25,18 @@ y = np.array(df['Admission'])
 number_of_samples = len(y)
 
 plt.figure(1)
-plt.scatter(df_yes['Score_Test_1'], df_yes['Score_Test_2'], marker = 'o')
-plt.scatter(df_no['Score_Test_1'], df_no['Score_Test_2'], marker = 'x')
+plt.scatter(df_yes['Score_Test_1'], df_yes['Score_Test_2'], marker = 'o', label = 'Admitted')
+plt.scatter(df_no['Score_Test_1'], df_no['Score_Test_2'], marker = 'x', label = 'Not Admitted')
 plt.xlabel('Scores Test 1')
 plt.ylabel('Score Test 2')
+plt.legend()
 plt.show()
+
+test_scalar = 0
+test_vector = np.zeros((3,1))
+test_matrix = np.zeros((3,3))
+
+print(util.sigmoid(test_scalar))
+print(util.sigmoid(test_vector))
+print(util.sigmoid(test_matrix))
+
