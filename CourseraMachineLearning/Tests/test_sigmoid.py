@@ -3,7 +3,7 @@ from CourseraMachineLearning.util import sigmoid
 import numpy as np
 import math
 
-class TestFactorial(unittest.TestCase):
+class Test(unittest.TestCase):
     """
     Our basic test class
     """
@@ -49,9 +49,9 @@ class TestFactorial(unittest.TestCase):
         """
 
         input_scalar = math.inf
-        given_res_scalar = 0.5
+        given_res_scalar = 0.0
         test_res_scalar = sigmoid(input_scalar)
-        self.assertEqual(given_res_scalar, given_res_scalar)
+        self.assertEqual(given_res_scalar, test_res_scalar)
 
     def test_sigmoid_with_vector_input_positive_infinity(self):
         """
