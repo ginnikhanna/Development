@@ -29,15 +29,20 @@ plt.scatter(df_no['Score_Test_1'], df_no['Score_Test_2'], marker = 'x', label = 
 plt.xlabel('Scores Test 1')
 plt.ylabel('Score Test 2')
 plt.legend()
-plt.show()
+#plt.show()
 
 # Prepare data to calculate cost function
 ones = np.ones((1,number_of_samples))
 X = np.vstack((ones, X))
 
-initial_theta = np.zeros((3,1))
-cost = logisticregression.compute_cost(X, initial_theta, y)
-gradients = logisticregression.compute_gradients(X, initial_theta, y)
+initial_theta = np.zeros(3)
+#cost = logisticregression.compute_cost(X, initial_theta, y)
+#gradients = logisticregression.compute_gradients(X, initial_theta, y)
 
-print(f'Cost : {cost}')
-print(f'Gradients: {gradients}')
+#print(f'Cost : {cost}')
+#print(f'Gradients: {gradients}')
+
+result = logisticregression.minimize_cost_and_find_theta(initial_theta, X, y)
+print(result)
+
+
