@@ -1,6 +1,9 @@
 import csv
 import numpy as np
 import sys
+import seaborn
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
 
 import pandas as pd
 from CourseraMachineLearning import util
@@ -65,7 +68,7 @@ p.line(x = 'Population',
        source = df_src,
        legend_label ='Predicted Model'
        )
-show(p)
+#show(p)
 
 #PREDICT VALUES FOR POPULATION OF 35,000 and 70,000
 profit_1 = np.array([1, 3.5]).transpose().dot(theta) * 10000
@@ -73,3 +76,25 @@ profit_2 = np.array([1, 7.0]).transpose().dot(theta) * 10000
 
 print(f'Profit for population of 35000 is {profit_1}')
 print(f'Profit for population of 70000 is {profit_2}')
+
+# PLOT COST FUNCTION ON A GRID
+
+theta0_values = np.linspace(-10, 10, 100)
+theta1_values = np.linspace(-1 , 4, 100)
+J = np.zeros((len(theta0_values), len(theta1_values)))
+
+
+for index_theta0, val_theta0 in enumerate(theta0_values):
+    for index_theta1, val_theta1 in enumerate(theta1_values):
+        theta = np.array((val_theta0, val_theta1))
+        J[index_theta0, index_theta1] = util.compute_univariate_cost_function(X, theta, y)
+
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+ax.plot_surface(theta0_values, theta1_values, J, cmap= 'jet')
+plt.xlabel('Theta_0')
+plt.ylabel('Theta_1')
+
+plt.figure(10)
+plt.contour(theta0_values, theta1_values, J)
+plt.show()

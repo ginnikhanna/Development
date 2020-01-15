@@ -56,18 +56,18 @@ price_normal_equations = theta_normal_equations[0] + theta_normal_equations[1]*(
 print(price_normal_equations)
 
 # CALCULATE COST FUNCTION vs LEARNING RATE
-alpha_list = [0.001, 0.003, 0.01, 0.03, 0.03, 0.1, 0.3, 1, 1.3]
-theta = np.zeros((np.size(X_norm, 0), 1))
+alpha_list = [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
 number_of_iterations = 100
 
 for alpha in alpha_list:
+    theta = np.zeros((np.size(X_norm, 0), 1))
     theta, J, J_list = util.gradient_descent_multivariate(X_norm, theta, y, number_of_iterations, alpha)
+    plt.figure(5)
+    plt.plot(J_list, label = f'alpha = {alpha}')
 
-    plt.figure(20)
-    plt.plot(range(0, number_of_iterations, 1), J_list, label = f'alpha = {alpha}')
-
+plt.legend()
 plt.ylabel('Cost function J')
 plt.xlabel('Number of iterations')
-plt.legend()
+plt.legend(loc = 'best')
 plt.grid()
 plt.show()
