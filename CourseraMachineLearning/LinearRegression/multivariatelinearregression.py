@@ -6,7 +6,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
 import pandas as pd
-from CourseraMachineLearning import util
+from CourseraMachineLearning.Utility import linearregression
 
 FLT_EPSILON = 1e-4
 
@@ -29,7 +29,7 @@ plt.ylabel('Price in $s')
 
 
 # NORMALIZE FEATURES
-X_norm, mu, sigma = util.normalized_features_matrix(X)
+X_norm, mu, sigma = linearregression.normalized_features_matrix(X)
 
 #ADD THE ROW FOR 1s FOR THETA_0
 ones = np.ones((1, number_of_samples))
@@ -37,7 +37,7 @@ X_norm = np.vstack((ones, X_norm))
 
 #GET GRADIENT DESCENT
 theta = np.zeros((np.size(X_norm, 0), 1))
-theta, J, _ = util.gradient_descent_multivariate(X_norm, theta, y, number_of_iterations=400, alpha = 0.1)
+theta, J, _ = linearregression.gradient_descent_multivariate(X_norm, theta, y, number_of_iterations=400, alpha = 0.1)
 
 #PRICE PREDICTION FOR A 1650 ft2 3 BEDROOM HOUSE
 # DO SCALE THE FEATURES BEFORE MAKING A PREDICTION
@@ -50,7 +50,7 @@ y = np.array(df['Price'])
 ones = np.ones((1, number_of_samples))
 X = np.vstack((ones, X))
 
-theta_normal_equations = util.parameters_from_normal_equation(X, y)
+theta_normal_equations = linearregression.parameters_from_normal_equation(X, y)
 print(theta_normal_equations)
 price_normal_equations = theta_normal_equations[0] + theta_normal_equations[1]*(1650) + theta_normal_equations[2]*3
 print(price_normal_equations)
@@ -61,7 +61,7 @@ number_of_iterations = 100
 
 for alpha in alpha_list:
     theta = np.zeros((np.size(X_norm, 0), 1))
-    theta, J, J_list = util.gradient_descent_multivariate(X_norm, theta, y, number_of_iterations, alpha)
+    theta, J, J_list = linearregression.gradient_descent_multivariate(X_norm, theta, y, number_of_iterations, alpha)
     plt.figure(5)
     plt.plot(J_list, label = f'alpha = {alpha}')
 
