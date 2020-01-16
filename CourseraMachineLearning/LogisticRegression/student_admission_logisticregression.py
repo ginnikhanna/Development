@@ -1,3 +1,4 @@
+from __future__ import division
 import csv
 import numpy as np
 import sys
@@ -29,7 +30,6 @@ plt.scatter(df_no['Score_Test_1'], df_no['Score_Test_2'], marker = 'x', label = 
 plt.xlabel('Scores Test 1')
 plt.ylabel('Score Test 2')
 plt.legend()
-#plt.show()
 
 # Prepare data to calculate cost function
 ones = np.ones((1,number_of_samples))
@@ -39,10 +39,16 @@ initial_theta = np.zeros(3)
 cost = logisticregression.compute_cost(initial_theta, X,  y)
 gradients = logisticregression.compute_gradients(initial_theta, X, y)
 
-print(f'Cost : {cost}')
-print(f'Gradients: {gradients}')
+print(f'Cost at initial theta : {cost}')
+print(f'Gradients at initial theta: {gradients}')
 
+# Perform optimization on cost_function to find optimized theta
 result = logisticregression.minimize_cost_and_find_theta(initial_theta, X, y)
-print(f'Optimized parameters: {result.x}')
+final_theta = result.x
+print (f'Final cost at optimized thetas: {result.fun}')
 
+print(f'Optimized thetas: {result.x}')
 
+# Plot decision boundary
+plot_with_decision_boundary = logisticregression.plot_decision_boundary(final_theta, X, y, fig_number = 1)
+plt.show()
