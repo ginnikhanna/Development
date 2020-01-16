@@ -71,4 +71,30 @@ def plot_decision_boundary(theta : np.ndarray, X: np.ndarray, y:np.ndarray, fig_
     plt.legend()
     return fig
 
+def predict_outcome_for_given_dataset(theta: np.ndarray, X : np.ndarray) -> np.ndarray:
+    ''' X : np.array with  M x N dimensions
+           theta : np.array with M x 1 dimensions
+    '''
+
+    probability = sigmoid(X.transpose().dot(theta))
+    prediction = (probability > 0.5).astype(int)
+    return prediction
+
+
+def construct_matrix_with_mapped_features(X : np.ndarray, degree) -> np.ndarray:
+    '''
+
+    :param X: feature matrix
+    :param degree : highest order of the polynomial
+    :return: higher dimension feature matrix
+    '''
+
+    X_out = np.ones((1, len(X[1])))
+
+    for i in range(1, degree + 1, 1):
+        for j in range(0, i + 1, 1):
+            X_out = np.vstack((X_out, pow(X[0], (i - j)) * pow(X[1], j)))
+
+    return X_out
+
 
