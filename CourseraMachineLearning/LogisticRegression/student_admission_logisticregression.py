@@ -36,13 +36,13 @@ ones = np.ones((1,number_of_samples))
 X = np.vstack((ones, X))
 
 initial_theta = np.zeros(3)
-#cost = logisticregression.compute_cost(X, initial_theta, y)
-#gradients = logisticregression.compute_gradients(X, initial_theta, y)
+cost = logisticregression.compute_cost(initial_theta, X,  y)
+gradients = logisticregression.compute_gradients(initial_theta, X, y)
 
-#print(f'Cost : {cost}')
-#print(f'Gradients: {gradients}')
+print(f'Cost : {cost}')
+print(f'Gradients: {gradients}')
 
 result = logisticregression.minimize_cost_and_find_theta(initial_theta, X, y)
-print(result)
+print(f'Optimized parameters: {result.x}')
 
 
