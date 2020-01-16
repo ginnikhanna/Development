@@ -8,38 +8,53 @@ def sigmoid(z):
     return sig
 
 def compute_cost(theta : np.ndarray, X : np.ndarray , y:np.ndarray) -> float:
-    ''' X : np.array with  M x N dimensions
-        theta : np.array with M x 1 dimensions
-        y : np.array with  1 x N dimensions
-        M : number of parameters
-        N : number of training samples
-        NOTE : the first argument is a variable which has to be optimized later with the minimization algorithm
     '''
 
+    :param theta: np.array with Mx1 dimension
+    :param X: np.array MxN dimension
+    :param y: np.array with 1xN dimension
+    :return: cost J_theta
+    '''
     J_theta = np.mean(-y * np.log(sigmoid(theta.transpose().dot(X))) - (1-y) * np.log(1 - sigmoid(theta.transpose().dot(X))))
 
     return J_theta
 
-def compute_gradients(theta : np.ndarray, X : np.ndarray , y:np.ndarray) -> np.ndarray:
-    ''' X : np.array with  M x N dimensions
-        theta : np.array with M x 1 dimensions
-        y : np.array with  1 x N dimensions
-        M : number of parameters
-        N : number of training samples
-       NOTE : the first argument is a variable which has to be optimized later with the minimization algorithm
+def compute_cost_with_regularization(theta : np.ndarray, X : np.ndarray , y:np.ndarray, lambda_for_regularization :float) -> float:
     '''
+
+    :param theta: np.array with Mx1 dimension
+    :param X: np.array MxN dimension
+    :param y: np.array with 1xN dimension
+    :param lambda_for_regularization : float
+    :return: cost J_theta
+    '''
+    theta_for_regularization = theta[1:]
+    J_theta = np.mean(-y * np.log(sigmoid(theta.transpose().dot(X))) -
+                      (1-y) * np.log(1 - sigmoid(theta.transpose().dot(X)))) \
+                       + lambda_for_regularization/(2*len(y)) * np.sum(theta_for_regularization**2)
+
+    return J_theta
+
+
+def compute_gradients(theta : np.ndarray, X : np.ndarray , y:np.ndarray) -> np.ndarray:
+    '''
+
+        :param theta: np.array with Mx1 dimension
+        :param X: np.array MxN dimension
+        :param y: np.array with 1xN dimension
+        :return: gradients
+        '''
     gradients = (sigmoid(theta.transpose().dot(X)) - y).dot(X.transpose())/len(y)
     return gradients
 
 
 def minimize_cost_and_find_theta(initial_theta: np.ndarray, X :np.ndarray, y:np.ndarray) -> tuple():
-
-    ''' X : np.array with  M x N dimensions
-        theta : np.array with M x 1 dimensions
-        y : np.array with  1 x N dimensions
-        M : number of parameters
-        N : number of training samples
-        '''
+    '''
+       :param initial_theta: np.array with Mx1 dimension
+       :param X: np.array MxN dimension
+       :param y: np.array with 1xN dimension
+       :return: optimized parameters thetas
+    '''
 
     # Advanced minimizing algorithm
     result = so.minimize(fun =compute_cost,
@@ -55,13 +70,12 @@ def minimize_cost_and_find_theta(initial_theta: np.ndarray, X :np.ndarray, y:np.
     return result
 
 def plot_decision_boundary(theta : np.ndarray, X: np.ndarray, y:np.ndarray, fig_number : int) -> plt.figure:
-
-    ''' X : np.array with  M x N dimensions
-        theta : np.array with M x 1 dimensions
-        y : np.array with  1 x N dimensions
-        M : number of parameters
-        N : number of training samples
-        fig_number : figure number where the features are plotted
+    '''
+        :param initial_theta: np.array with Mx1 dimension
+        :param X: np.array MxN dimension
+        :param y: np.array with 1xN dimension
+        :param fig_number
+        :return: figure object
         '''
 
     x_1 = np.array([min(X[1]), max(X[1])])
@@ -72,10 +86,12 @@ def plot_decision_boundary(theta : np.ndarray, X: np.ndarray, y:np.ndarray, fig_
     return fig
 
 def predict_outcome_for_given_dataset(theta: np.ndarray, X : np.ndarray) -> np.ndarray:
-    ''' X : np.array with  M x N dimensions
-           theta : np.array with M x 1 dimensions
     '''
 
+    :param theta: np.array with Mx1 dimension
+    :param X: np.array MxN dimension
+    :return: prediction for the dataset
+    '''
     probability = sigmoid(X.transpose().dot(theta))
     prediction = (probability > 0.5).astype(int)
     return prediction
@@ -86,7 +102,7 @@ def construct_matrix_with_mapped_features(X : np.ndarray, degree) -> np.ndarray:
 
     :param X: feature matrix
     :param degree : highest order of the polynomial
-    :return: higher dimension feature matrix
+    :return: higher dimension feature matrix X_out
     '''
 
     X_out = np.ones((1, len(X[1])))

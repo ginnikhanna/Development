@@ -40,3 +40,7 @@ plt.show()
 
 X_with_mapped_features = logisticregression.construct_matrix_with_mapped_features(X, degree= 6)
 print(X_with_mapped_features.shape)
+
+theta = np.zeros(X_with_mapped_features.shape[0])
+cost_with_regularization = logisticregression.compute_cost_with_regularization(theta, X_with_mapped_features, y, lambda_for_regularization =1)
+print(cost_with_regularization)
