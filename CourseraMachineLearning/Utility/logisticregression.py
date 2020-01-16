@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.optimize as so
+import matplotlib.pyplot as plt
 
 def sigmoid(z):
 
@@ -31,7 +32,7 @@ def compute_gradients(theta : np.ndarray, X : np.ndarray , y:np.ndarray) -> np.n
     return gradients
 
 
-def minimize_cost_and_find_theta(initial_theta, X, y):
+def minimize_cost_and_find_theta(initial_theta: np.ndarray, X :np.ndarray, y:np.ndarray) -> tuple():
 
     ''' X : np.array with  M x N dimensions
         theta : np.array with M x 1 dimensions
@@ -52,4 +53,22 @@ def minimize_cost_and_find_theta(initial_theta, X, y):
     jac : function to calculate the gradient 
     '''
     return result
+
+def plot_decision_boundary(theta : np.ndarray, X: np.ndarray, y:np.ndarray, fig_number : int) -> plt.figure:
+
+    ''' X : np.array with  M x N dimensions
+        theta : np.array with M x 1 dimensions
+        y : np.array with  1 x N dimensions
+        M : number of parameters
+        N : number of training samples
+        fig_number : figure number where the features are plotted
+        '''
+
+    x_1 = np.array([min(X[1]), max(X[1])])
+    x_2 = -theta[0]/theta[2] - theta[1]/theta[2]*x_1
+    fig = plt.figure(fig_number)
+    plt.plot(x_1, x_2, color = 'k', linewidth = 2, label = 'Decision Boundary')
+    plt.legend()
+    return fig
+
 
