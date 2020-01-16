@@ -25,8 +25,6 @@ def compute_gradients(theta : np.ndarray, X : np.ndarray , y:np.ndarray) -> np.n
         M : number of parameters
         N : number of training samples
     '''
-
-    print(theta)
     gradients = (sigmoid(theta.transpose().dot(X)) - y).dot(X.transpose())/len(y)
     return gradients
 
