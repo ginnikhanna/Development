@@ -47,6 +47,23 @@ def compute_gradients(theta : np.ndarray, X : np.ndarray , y:np.ndarray) -> np.n
     gradients = (sigmoid(theta.transpose().dot(X)) - y).dot(X.transpose())/len(y)
     return gradients
 
+def compute_gradients_with_regularization(theta : np.ndarray, X : np.ndarray , y:np.ndarray, lambda_for_regularization :float) -> np.ndarray:
+    '''
+
+        :param theta: np.array with Mx1 dimension
+        :param X: np.array MxN dimension
+        :param y: np.array with 1xN dimension
+        :return: gradients
+        '''
+
+
+    gradients = (sigmoid(theta.transpose().dot(X)) - y).dot(X.transpose())/len(y)
+    for index, theta_val in enumerate(theta):
+        if index > 0 :
+            gradients[index] = gradients[index] + lambda_for_regularization/len(y) * theta_val
+    return gradients
+
+
 
 def minimize_cost_and_find_theta(initial_theta: np.ndarray, X :np.ndarray, y:np.ndarray) -> tuple():
     '''
@@ -69,7 +86,29 @@ def minimize_cost_and_find_theta(initial_theta: np.ndarray, X :np.ndarray, y:np.
     '''
     return result
 
-def plot_decision_boundary(theta : np.ndarray, X: np.ndarray, y:np.ndarray, fig_number : int) -> plt.figure:
+def minimize_cost_and_find_theta_with_regularization(initial_theta: np.ndarray, X :np.ndarray, y:np.ndarray, lambda_for_regularization) -> tuple():
+    '''
+       :param initial_theta: np.array with Mx1 dimension
+       :param X: np.array MxN dimension
+       :param y: np.array with 1xN dimension
+       :param lambda_for_regularization
+       :return: optimized parameters thetas
+    '''
+
+    # Advanced minimizing algorithm
+    result = so.minimize(fun =compute_cost_with_regularization,
+                         x0 =initial_theta,
+                         args = (X,y, lambda_for_regularization),
+                         jac = compute_gradients_with_regularization)
+    '''
+    fun : function to minimize, in this case it is compute_cost 
+    x0 : initial value of the variable to be optimized for minimum cost 
+    args : additional arguments to the compute_cost function 
+    jac : function to calculate the gradient 
+    '''
+    return result
+
+def plot_decision_boundary_line(theta : np.ndarray, X: np.ndarray, y:np.ndarray, fig_number : int) -> plt.figure:
     '''
         :param initial_theta: np.array with Mx1 dimension
         :param X: np.array MxN dimension
@@ -78,12 +117,44 @@ def plot_decision_boundary(theta : np.ndarray, X: np.ndarray, y:np.ndarray, fig_
         :return: figure object
         '''
 
-    x_1 = np.array([min(X[1]), max(X[1])])
-    x_2 = -theta[0]/theta[2] - theta[1]/theta[2]*x_1
-    fig = plt.figure(fig_number)
-    plt.plot(x_1, x_2, color = 'k', linewidth = 2, label = 'Decision Boundary')
-    plt.legend()
-    return fig
+    if theta.shape[0] <=2:
+        x_1 = np.array([min(X[1]), max(X[1])])
+        x_2 = -theta[0]/theta[2] - theta[1]/theta[2]*x_1
+        fig = plt.figure(fig_number)
+        plt.plot(x_1, x_2, color = 'k', linewidth = 2, label = 'Decision Boundary')
+        plt.legend()
+        return fig
+
+def plot_decision_boundary_contours(theta : np.ndarray,
+                                    X: np.ndarray,
+                                    y:np.ndarray,
+                                    fig_number : int,
+                                    color :str) -> plt.figure:
+    '''
+        :param initial_theta: np.array with Mx1 dimension
+        :param X: np.array MxN dimension
+        :param y: np.array with 1xN dimension
+        :param fig_number
+        :return: figure object
+    '''
+
+    features_min = X.min(axis = 1)
+    features_max = X.max(axis = 1)
+
+    u = np.linspace(features_min[0] ,features_max[0], 50)
+    v = np.linspace(features_min[0], features_max[0], 50)
+
+    z = np.zeros((len(u), len(v)))
+
+    for i, val_u in enumerate(u):
+        for j, val_v in enumerate(v):
+            input_feature_matrix = np.vstack((val_u, val_v))
+            input_mapped_feature_matrix = construct_matrix_with_mapped_features(input_feature_matrix, degree = 6)
+            z[i,j] = input_mapped_feature_matrix.transpose().dot(theta)
+
+    fig  = plt.figure(fig_number)
+    cntr = plt.contour(u, v, z.transpose(), levels = 0, colors = color)
+    return cntr
 
 def predict_outcome_for_given_dataset(theta: np.ndarray, X : np.ndarray) -> np.ndarray:
     '''
@@ -94,8 +165,18 @@ def predict_outcome_for_given_dataset(theta: np.ndarray, X : np.ndarray) -> np.n
     '''
     probability = sigmoid(X.transpose().dot(theta))
     prediction = (probability > 0.5).astype(int)
+
     return prediction
 
+def get_accuracy(prediction : np.ndarray, y: np.ndarray) -> float:
+    '''
+
+    :param prediction: predicted vector from optimization
+    :param y: actual output
+    :return: accuracy
+    '''
+    accuracy = len(np.where((prediction == y))[0]) / len(y) * 100.0
+    return accuracy
 
 def construct_matrix_with_mapped_features(X : np.ndarray, degree) -> np.ndarray:
     '''
