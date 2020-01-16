@@ -52,3 +52,14 @@ print(f'Optimized thetas: {result.x}')
 # Plot decision boundary
 plot_with_decision_boundary = logisticregression.plot_decision_boundary(final_theta, X, y, fig_number = 1)
 plt.show()
+
+# Predicting if a student will be admitted or not
+# At first we will find the probability of a student with scores 45,85 to be admitted in the program
+x = np.array([1, 45, 85])
+probability_of_admission = logisticregression.sigmoid(x.dot(final_theta))
+print(f'Probability of admission for a student with scores 45 and 85 is : {probability_of_admission}')
+
+prediction_on_training_data_set = logisticregression.predict_outcome_for_given_dataset(final_theta, X)
+
+accuracy = len(np.where((prediction_on_training_data_set == y))[0])/len(y) * 100.0
+print(accuracy)
