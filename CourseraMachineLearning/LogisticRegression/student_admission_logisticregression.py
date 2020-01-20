@@ -50,7 +50,7 @@ print (f'Final cost at optimized thetas: {result.fun}')
 print(f'Optimized thetas: {result.x}')
 
 # Plot decision boundary
-plot_with_decision_boundary = logisticregression.plot_decision_boundary(final_theta, X, y, fig_number = 1)
+plot_with_decision_boundary = logisticregression.plot_decision_boundary_line(final_theta, X, y, fig_number = 1)
 plt.show()
 
 # Predicting if a student will be admitted or not
@@ -62,4 +62,4 @@ print(f'Probability of admission for a student with scores 45 and 85 is : {proba
 prediction_on_training_data_set = logisticregression.predict_outcome_for_given_dataset(final_theta, X)
 
 accuracy = len(np.where((prediction_on_training_data_set == y))[0])/len(y) * 100.0
-print(accuracy)
+print(f'Accuracy of classification algorithm on training set is {accuracy} %')
