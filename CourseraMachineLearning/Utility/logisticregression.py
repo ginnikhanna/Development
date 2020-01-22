@@ -57,10 +57,8 @@ def compute_gradients_with_regularization(theta : np.ndarray, X : np.ndarray , y
         '''
 
 
-    gradients = (sigmoid(theta.transpose().dot(X)) - y).dot(X.transpose())/len(y)
-    for index, theta_val in enumerate(theta):
-        if index > 0 :
-            gradients[index] = gradients[index] + lambda_for_regularization/len(y) * theta_val
+    theta_t = np.hstack((0, theta[1:]))
+    gradients = (sigmoid(theta.transpose().dot(X)) - y).dot(X.transpose())/len(y) + lambda_for_regularization/len(y) * theta_t
     return gradients
 
 
