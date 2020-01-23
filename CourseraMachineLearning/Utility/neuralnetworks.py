@@ -27,11 +27,13 @@ def display_data(X : np.ndarray, number_of_images_to_plot:int) -> plt.figure():
     return fig
 
 
-def one_vs_all(X: np.ndarray, y:np.ndarray, num_labels:int) -> np.ndarray:
+def one_vs_all(X: np.ndarray, y:np.ndarray, num_labels:int, lambda_for_regularization:float, optimization_algo:str ) -> np.ndarray:
     '''
     :param X: M x N matrix
     :param y: 1 x N vector
     :param theta : M x 1 vector
+    :param lambda_for_regularization
+    :param optimization_algo : 'minimize', 'fmin_cg'
     M : number of parameteres
     N : number of training samples
     :return: optimized_theta with dimensions
@@ -44,13 +46,29 @@ def one_vs_all(X: np.ndarray, y:np.ndarray, num_labels:int) -> np.ndarray:
 
     theta = np.zeros((X.shape[0]))
     optimized_theta = np.zeros_like(theta)
-    all_theta = np.zeros((X.shape[0], num_labels + 1))
+    all_theta = np.zeros((X.shape[0], num_labels))
     cost = np.zeros((num_labels))
 
     for label in np.arange(1, 11, 1):
-        y = (y == label).astype(int)
-        optimized_parameters = logisticregression.minimize_cost_and_find_theta_with_regularization(theta, X, y, lambda_for_regularization=0.1)
-        all_theta[:,label] = optimized_parameters.x
-        cost[label] = optimized_parameters.fun
+        y_training = (y == label).astype(int)
+        optimized_parameters = logisticregression.minimize_cost_and_find_theta_with_regularization(theta, X, y_training, lambda_for_regularization, optimization_algo)
+        all_theta[:,label-1] = optimized_parameters
 
-        print(f'Label : {label} with cost {cost[label]} and gradients {all_theta[:,label]}')
+    return all_theta
+
+def predict_outcome_for_digit_dataset(X : np.ndarray, theta : np.ndarray):
+    '''
+
+    :param X: M x N matrix
+    :param theta: M x number_of_digits
+    :return: prediction : 1 x N
+    '''
+    ones = np.ones((1, X.shape[0]))
+    X = X.transpose()
+    X = np.vstack((ones, X))
+    prediction = X.transpose().dot(theta)
+    prediction = np.argmax(prediction, axis = 1) + 1
+
+n    return prediction
+
+    print('End')
