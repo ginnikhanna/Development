@@ -18,6 +18,7 @@ y_training = data['y']
 #Plot data
 plot_training_data = plot.display_data(X_training, 100)
 
+#Toy data
 theta = np.array([-2, -1, 1, 2])
 X_t = np.arange(1, 16).reshape(3,5)/10
 y = np.array([1,0,1,0,1])
@@ -28,7 +29,6 @@ lambda_for_regularization  = 3
 
 cost = logisticregression.compute_cost_with_regularization(theta, X, y, lambda_for_regularization)
 gradients = logisticregression.compute_gradients_with_regularization(theta, X, y, lambda_for_regularization)
-#gradients = logisticregression.minimize_cost_and_find_theta_with_regularization(theta, X, y, lambda_for_regularization, OptimizationAlgo.MINIMIZE)
 
 print(f'Cost : {cost}')
 print(f'Gradients : {gradients}')
