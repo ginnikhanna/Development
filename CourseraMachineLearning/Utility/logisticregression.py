@@ -222,7 +222,7 @@ def construct_matrix_with_mapped_features(X: np.ndarray, degree) -> np.ndarray:
 
 def one_vs_all_classifier(X: np.ndarray, y:np.ndarray, num_labels:int, lambda_for_regularization:float, optimization_algo:str ) -> np.ndarray:
     '''
-    :param X: M x N matrix
+    :param X: N x M matrix
     :param y: 1 x N vector
     :param theta : M x 1 vector
     :param lambda_for_regularization
@@ -244,7 +244,7 @@ def one_vs_all_classifier(X: np.ndarray, y:np.ndarray, num_labels:int, lambda_fo
 
     for label in np.arange(1, 11, 1):
         y_training = (y == label).astype(int)
-        optimized_parameters = logisticregression.minimize_cost_and_find_theta_with_regularization(theta, X, y_training, lambda_for_regularization, optimization_algo)
+        optimized_parameters = minimize_cost_and_find_theta_with_regularization(theta, X, y_training, lambda_for_regularization, optimization_algo)
         all_theta[:,label-1] = optimized_parameters
 
     return all_theta
