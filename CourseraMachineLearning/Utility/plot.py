@@ -22,14 +22,14 @@ def display_data(X : np.ndarray, number_of_images_to_plot:int, fig_number:int) -
     if number_of_images_to_plot == 1:
         fig = plt.figure(fig_number, figsize=(3, 3))
         X_reshaped = X.reshape((number_of_pixels,number_of_pixels))
-        plt.imshow(X_reshaped)
+        plt.imshow(X_reshaped.transpose())
 
     elif number_of_images_to_plot > 1:
         fig = plt.figure(fig_number, figsize=(rows, columns))
         for index, value in enumerate(random_images):
             X_reshaped = X[value].reshape((number_of_pixels,number_of_pixels))
             fig.add_subplot(rows, columns, index + 1)
-            plt.imshow(X_reshaped)
+            plt.imshow(X_reshaped.transpose())
 
     return fig
 
