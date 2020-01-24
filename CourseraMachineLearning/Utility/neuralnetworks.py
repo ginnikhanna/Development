@@ -1,29 +1,39 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from CourseraMachineLearning.Utility import logisticregression
+from typing import List
 
-def display_data(X : np.ndarray, number_of_images_to_plot:int) -> plt.figure():
+def sigmoid(z):
+    sig = 1 / (1 + np.exp(-z))
+    return sig
+
+def predict_outcome_for_digit_dataset(X : np.ndarray, theta : List):
     '''
-    Reads a NxM matrix, makes a reshaped matrix and plots the individual images on a
-    square grid depending on how many images have to be plotted
+
     :param X: M x N matrix
-    :param : number of images to plot
-    N : number of training samples
-    M : number of parameters
-    :return:
+    :param theta: List[theta_s] where theta_s = M x (number_of_features_in_that_hidden_layer)
+    :return: prediction : N x 1 vector with predictions of the output in this case
     '''
 
-    random_images = np.random.randint(0, X.shape[0], number_of_images_to_plot)
-    rows = np.sqrt(number_of_images_to_plot)
-    columns = rows
+    ones = np.ones((1, X.shape[1]))
+    X = np.vstack((ones, X))
+    assert X.shape[0] == theta[0].shape[0]
 
-    number_of_pixels = int(np.sqrt(X.shape[1]))
-    fig = plt.figure(1 , figsize=(rows, columns))
-    for index, value in enumerate(random_images):
-        X_reshaped = X[value].reshape((number_of_pixels,number_of_pixels))
-        fig.add_subplot(rows, columns, index + 1)
-        plt.imshow(X_reshaped)
+    A = sigmoid(theta[0].transpose().dot(X))
+    ones = np.ones((1, A.shape[1]))
+    A = np.vstack((ones, A))
+    assert A.shape[0] == theta[1].shape[0]
 
-    return fig
+    B = sigmoid(theta[1].transpose().dot(A))
+    prediction = np.argmax(B, axis = 0) + 1
 
+    return prediction
+
+def get_accuracy(prediction: np.ndarray, y: np.ndarray) -> float:
+    '''
+
+    :param prediction: predicted vector from optimization N x 1
+    :param y: actual output N x 1
+    :return: accuracy float
+    '''
+    accuracy = len(np.where((prediction == y))[0]) / len(y) * 100.0
+    return accuracy
 
