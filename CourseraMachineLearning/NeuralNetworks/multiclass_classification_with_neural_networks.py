@@ -21,7 +21,7 @@ X_training = data['X']
 y_training = data['y']
 
 #Plot data
-plot_training_data = plot.display_data(X_training, 100)
+plot_training_data = plot.display_data(X_training,  36, fig_number=1)
 #plt.show()
 
 # Load weights of neural network
@@ -39,3 +39,12 @@ accuracy = neuralnetworks.get_accuracy(prediction, y_training.flatten())
 
 print(f'Accuracy of the neural network is : {accuracy}')
 
+random_row = np.random.randint(0, 5000)
+print(random_row)
+
+input_image = X_training[random_row :random_row + 1,:]
+prediction_digit = neuralnetworks.predict_outcome_for_digit_dataset(input_image.transpose(), theta)
+
+print(f'Predicted digit: {prediction_digit} and training digit : {y_training[random_row]}')
+plot_random_digit = plot.display_data(input_image, 1, fig_number=2)
+plt.show()
