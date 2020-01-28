@@ -29,6 +29,7 @@ class Test(unittest.TestCase):
                                                           nodes_in_outgoing_layer,
                                                           X, y, num_labels,
                                                           lambda_for_regularization=0)
+        #TODO: implement gradient calculation with numerical gradient
         print(grad_bp)
 
 if __name__ == '__main__':
