@@ -18,6 +18,9 @@ data = scipy.io.loadmat('ex4data1.mat')
 X_training = data['X']
 y_training = data['y']
 
+X_training = X_training.transpose()
+y_training = y_training.transpose()
+
 #Plot data
 plot_training_data = plot.display_data(X_training,  36, fig_number=1)
 plt.show()
@@ -27,3 +30,7 @@ plt.show()
 theta = scipy.io.loadmat('ex4weights.mat')
 theta_1 = theta['Theta1']
 theta_2 = theta['Theta2']
+
+theta = [theta_1, theta_2]
+
+neuralnetworks.compute_cost(theta, X_training, y_training)
