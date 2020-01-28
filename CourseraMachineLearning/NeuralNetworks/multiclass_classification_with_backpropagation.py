@@ -42,5 +42,7 @@ y_training = y_training.transpose()
 cost = neuralnetworks.compute_cost(parameters,
                                    input_layer_nodes_size,
                                    hidden_layer_nodes_size,
-                                   X_training, y_training, num_of_classes)
-print(f'Cost :{cost}')
+                                   X_training, y_training, num_of_classes,
+                                   lambda_for_regularization = 1)
+
+print(f'Cost with regularization : {cost} ')
