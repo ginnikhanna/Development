@@ -58,20 +58,22 @@ def reshape_parameters(parameters:np.ndarray,
 
     return [theta_0, theta_1]
 
-def compute_cost(parameters: np.ndarray, input_layer_nodes_size:int,
-                 hidden_layer_nodes_size : int,
-                 X: np.ndarray,
-                 y: np.ndarray,
-                 num_labels : int) -> float:
 
+def compute_cost(parameters: np.ndarray, input_layer_nodes_size: int,
+                                     hidden_layer_nodes_size: int,
+                                     X: np.ndarray,
+                                     y: np.ndarray,
+                                     num_labels: int,
+                                     lambda_for_regularization: float) -> float:
     '''
-
     :param theta:  Flat array consisting of all thetas
     :param input_layer_nodes_size
     :param  hidden_layer_nodes_size
     :param X: np.array MxN dimension
     :param y: np.array with 1xN dimension
+    :param lambda_for_regularization
     :return: cost J_theta
+
     '''
     number_of_training_samples = y.shape[1]
     theta = reshape_parameters(parameters,
@@ -90,8 +92,14 @@ def compute_cost(parameters: np.ndarray, input_layer_nodes_size:int,
 
     I = np.eye(num_labels + 1)
     Y = I[y, :]
-    Y = Y[0][:,1:].transpose()
+    Y = Y[0][:, 1:].transpose()
 
-    cost = sum(-Y * np.log((A_3)) - (1-Y) * np.log(1-A_3))
-    J_theta = sum(cost)/number_of_training_samples
+    cost = sum(-Y * np.log((A_3)) - (1 - Y) * np.log(1 - A_3))
+    J_theta = sum(cost) / number_of_training_samples
+
+    theta_0_regularization = theta[0][1:,]
+    theta_1_regularization = theta[1][1:,]
+
+    J_theta +=  lambda_for_regularization/(2*number_of_training_samples) \
+               * (sum(sum(theta_0_regularization ** 2)) + sum(sum(theta_1_regularization **2)))
     return J_theta
