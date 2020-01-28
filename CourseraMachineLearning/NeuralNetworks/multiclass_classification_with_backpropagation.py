@@ -13,13 +13,14 @@ The neural network consists of 3 layers
 The input consists of feature size of 400 elements. So the first layer has 400 nodes. 
 '''
 # Load Data
-data = scipy.io.loadmat('ex4data1.mat')
+num_of_classes = 10
+input_layer_nodes_size = 400
+hidden_layer_nodes_size = 25
 
+data = scipy.io.loadmat('ex4data1.mat')
 X_training = data['X']
 y_training = data['y']
 
-X_training = X_training.transpose()
-y_training = y_training.transpose()
 
 #Plot data
 plot_training_data = plot.display_data(X_training,  36, fig_number=1)
@@ -31,6 +32,15 @@ theta = scipy.io.loadmat('ex4weights.mat')
 theta_1 = theta['Theta1']
 theta_2 = theta['Theta2']
 
-theta = [theta_1, theta_2]
+parameters = np.hstack((theta_1.transpose().flatten(), theta_2.transpose().flatten()))
+theta = [theta_1.transpose(), theta_2.transpose()]
 
-neuralnetworks.compute_cost(theta, X_training, y_training)
+
+X_training = X_training.transpose()
+y_training = y_training.transpose()
+
+cost = neuralnetworks.compute_cost(parameters,
+                                   input_layer_nodes_size,
+                                   hidden_layer_nodes_size,
+                                   X_training, y_training, num_of_classes)
+print(f'Cost :{cost}')
