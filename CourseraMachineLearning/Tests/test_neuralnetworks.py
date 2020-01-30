@@ -132,10 +132,13 @@ class Test(unittest.TestCase):
 
     def test_prepare_output_matrix_from_given_output_vector_for_a_given_input(self):
 
-        input = np.array((0, 2, 3, 1, 0))
+        #TODO : This function is very specific to this case of Y
+
+        input = np.array((1, 2, 3, 4, 1))
+        input = input.reshape((1, len(input)))
         num_labels = 4
 
-        expected_output = np.array(([1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [0, 1, 0, 0], [1, 0, 0, 0]))
+        expected_output = np.array(([1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [1, 0, 0, 0]))
         expected_output = expected_output.transpose()
 
         actual_output = neuralnetworks.prepare_output_matrix_from_given_output_vector(input, num_labels)
@@ -201,7 +204,9 @@ class Test(unittest.TestCase):
 
 
 
+    def test_cost_for_given_input_arguments(self):
 
+        print('End')
 
 
     #
