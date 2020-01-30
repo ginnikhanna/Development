@@ -122,21 +122,85 @@ class Test(unittest.TestCase):
         self.assertEqual(expected_result, actual_result)
 
 
+    def test_add_bias_node_output_for_a_given_input(self):
+        input = np.ones((2,1))
+        expected_output = np.ones((3,1))
 
-    # def test_output_for_given_input_for_layer_one(self):
-    #
-    #     test_input = np.ones((2,1))
-    #     expected_output = np.ones((2,1))
-    #
-    #     actual_output = compute_activation_layer_one(test_input)
-    #
-    #     np.testing.assert_array_equal(actual_output, expected_output)
-    #
-    #
-    # def test_output_for_given_input_for_layer_two(self):
-    #
-    #     test_input = np.ones((2,1))
-    #     theta = np.ones((2,1)
+        actual_output = neuralnetworks.add_bias_node(input)
+
+        np.testing.assert_array_equal(expected_output, actual_output)
+
+    def test_prepare_output_matrix_from_given_output_vector_for_a_given_input(self):
+
+        input = np.array((0, 2, 3, 1, 0))
+        num_labels = 4
+
+        expected_output = np.array(([1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [0, 1, 0, 0], [1, 0, 0, 0]))
+        expected_output = expected_output.transpose()
+
+        actual_output = neuralnetworks.prepare_output_matrix_from_given_output_vector(input, num_labels)
+
+        np.testing.assert_array_equal(expected_output, actual_output)
+
+
+
+    def test_compute_activation_layer_one_value_for_a_given_input(self):
+        input = np.ones((2,1))
+        expected_output = np.ones((2,1))
+
+        actual_output = neuralnetworks.compute_activation_layer_one_values(input)
+
+        np.testing.assert_array_equal(expected_output, actual_output)
+
+    def test_compute_activation_layer_two_value_for_a_given_input(self):
+        input = np.zeros((2,1))
+        theta = np.ones((2,1))
+
+        expected_output = np.array((1,0.5)).reshape(2,1)
+
+        actual_output = neuralnetworks.compute_activation_layer_two_values(theta, input)
+
+        np.testing.assert_array_equal(expected_output, actual_output)
+
+    def test_compute_activation_layer_three_value_for_a_given_input(self):
+        input = np.zeros((2,1))
+        theta = np.ones((2,1))
+
+        expected_output = np.array((0.5))
+
+        actual_output = neuralnetworks.compute_activation_layer_three_values(theta, input)
+
+        np.testing.assert_array_equal(expected_output, actual_output)
+
+
+    def test_compute_neural_network_output_with_forward_propagation_for_a_given_input(self):
+
+        input = np.zeros((2,1))
+        theta = [np.ones((2,1)), np.ones((2,1))]
+
+        expected_output = neuralnetworks.sigmoid(np.array((1.5)))
+
+        actual_output = neuralnetworks.compute_neural_network_output_with_forward_propagation(theta, input)
+
+        np.testing.assert_array_equal(expected_output, actual_output)
+
+
+    def test_reshape_1d_parameter_array_to_respective_two_2d_arrays(self):
+
+        input = np.array((1, 2, 3, 1))
+        expected_output = [input[:2].reshape(2,1), input[2:].reshape(2,1)]
+
+        input_layer_nodes_size = 1
+        hidden_layer_nodes_size = 1
+        num_labels = 1
+
+        parameters_reshaped = neuralnetworks.reshape_1d_parameter_array_to_respective_two_2d_arrays(input.transpose(), input_layer_nodes_size, hidden_layer_nodes_size, num_labels)
+
+        np.testing.assert_array_equal(expected_output[0], parameters_reshaped[0])
+        np.testing.assert_array_equal(expected_output[1], parameters_reshaped[1])
+
+
+
 
 
 
