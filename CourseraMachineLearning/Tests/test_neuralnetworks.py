@@ -1,6 +1,7 @@
 import unittest
 from CourseraMachineLearning.Utility import neuralnetworks
 import numpy as np
+from functools import partial
 
 import math
 
@@ -203,34 +204,128 @@ class Test(unittest.TestCase):
         np.testing.assert_array_equal(expected_output[1], parameters_reshaped[1])
 
 
+    def test_prepare_output_for_different_inputs(self):
 
-    def test_cost_for_given_input_arguments(self):
+        input = np.array((1, 2, 3, 4, 10))
+        input = input.reshape(1, len(input))
 
-        print('End')
+        input_2 = np.where(input == 10, 0, input)
+
+        num_labels = 10
+
+        output_1 = neuralnetworks.prepare_output_matrix_from_given_output_vector(input, num_labels)
+
+        output_2 = neuralnetworks.prepare_output_matrix_from_given_output_vector_new(input_2, num_labels)
 
 
-    #
-    # def test_output_for_given_input_parameters_for_3_layer_neural_network(self):
-    #
-    #     expected_output = np.array((0.5, 0.5))
-    #
-    #     parameters_input = np.array((0.5, -0.5, -0.5, 1))
-    #     X = np.array((1))
-    #     X = np.vstack((1, X))
-    #
-    #     input_layer_nodes_size = 1
-    #     hidden_layer_nodes_size = 1
-    #     num_labels = 1
-    #
-    #     parameters_reshaped = reshape_parameters(parameters_input,
-    #                                              input_layer_nodes_size,
-    #                                              hidden_layer_nodes_size,
-    #                                              num_labels)
-    #
-    #     activation = compute_activation_using_forward_propagation(parameters_reshaped, X)
-    #
-    #     np.testing.assert_array_almost_equal(expected_output[0], activation[0])
-    #     np.testing.assert_array_almost_equal(expected_output[1], activation[1])
+
+    def fake_matrix_rand_f(self, rows, columns):
+        return np.ones((rows, columns)) / 3
+
+
+    def test_that_output_is_random_matrix_with_all_values_non_zero(self):
+        nodes_in_incoming_layer = 3
+        nodes_in_outgoing_layer = 2
+
+        given_results = np.zeros((nodes_in_incoming_layer,nodes_in_outgoing_layer))
+
+        R = neuralnetworks.randomly_initialize_parameters(nodes_in_incoming_layer, nodes_in_outgoing_layer)
+
+        self.assertNotEqual(given_results.all(), R.all())
+
+
+    def test_that_the_output_of_numerical_gradient_is_equal_for_both_direct_and_partial_function_implementation(self):
+        nodes_in = 3
+        nodes_out = 5
+        number_of_classes = 3
+        number_of_training_samples = 5
+        EPSILON = 1e-04
+
+        theta_1 = neuralnetworks.randomly_initialize_parameters(nodes_out, nodes_in + 1)
+        theta_2 = neuralnetworks.randomly_initialize_parameters(number_of_classes, nodes_out + 1)
+
+        X_training = neuralnetworks.randomly_initialize_parameters(number_of_training_samples, nodes_in)
+        y_training = np.array((1, 2, 3, 3, 1))
+        y_training = y_training.reshape(1, len(y_training))
+
+        X_training = X_training.transpose()
+
+        parameters = np.hstack((theta_1.transpose().flatten(), theta_2.transpose().flatten()))
+
+        perturb = np.zeros_like((parameters))
+        numerical_grad = np.zeros_like((parameters))
+        numerical_grad_partial_function = np.zeros_like((parameters))
+
+        cost_func = partial(neuralnetworks.compute_cost,
+                            input_layer_nodes_size=nodes_in,
+                            hidden_layer_nodes_size=nodes_out,
+                            X=X_training,
+                            y=y_training,
+                            num_labels=number_of_classes,
+                            lambda_for_regularization=0)
+
+        for index, val in enumerate(perturb):
+            perturb[index] = EPSILON
+            parameters_plus = parameters + perturb
+            parameters_minus = parameters - perturb
+
+            cost_plus = neuralnetworks.compute_cost(parameters_plus,
+                                     nodes_in,
+                                     nodes_out, X_training, y_training, number_of_classes,
+                                     lambda_for_regularization=0)
+            cost_minus = neuralnetworks.compute_cost(parameters_minus,
+                                      nodes_in,
+                                      nodes_out, X_training, y_training, number_of_classes,
+                                      lambda_for_regularization=0)
+
+            numerical_grad[index] = (cost_plus - cost_minus) / (2 * EPSILON)
+
+            cost_plus_partial_function = cost_func(parameters_plus)
+            cost_minus_partial_function = cost_func(parameters_minus)
+
+            numerical_grad_partial_function[index] = (cost_plus_partial_function - cost_minus_partial_function) / (
+                        2 * EPSILON)
+
+            perturb[index] = 0
+
+        np.testing.assert_array_equal(numerical_grad, numerical_grad_partial_function)
+
+
+    def test_that_numerical_gradient_output_is_equal_to_gradient_obtained_from_back_propagation(self):
+        nodes_in = 3
+        nodes_out = 5
+        number_of_classes = 3
+        number_of_training_samples = 5
+        EPSILON = 1e-04
+
+        theta_1 = neuralnetworks.randomly_initialize_parameters(nodes_out, nodes_in + 1)
+        theta_2 = neuralnetworks.randomly_initialize_parameters(number_of_classes, nodes_out + 1)
+
+        X_training = neuralnetworks.randomly_initialize_parameters(number_of_training_samples, nodes_in)
+        y_training = np.array((1, 2, 3, 3, 1))
+        y_training = y_training.reshape(1, len(y_training))
+
+        X_training = X_training.transpose()
+
+        parameters = np.hstack((theta_1.transpose().flatten(), theta_2.transpose().flatten()))
+
+        perturb = np.zeros_like((parameters))
+        numerical_grad = np.zeros_like((parameters))
+
+        numerical_grad = neuralnetworks.compute_numerical_gradient(parameters,
+                                                                   nodes_in,
+                                                                   nodes_out,
+                                                                   X_training,
+                                                                   y_training,
+                                                                   number_of_classes,
+                                                                   lambda_for_regularization=0)
+        back_propagation_grad = neuralnetworks.compute_gradients_with_back_propagation(parameters,
+                                                                                       nodes_in,
+                                                                                       nodes_out, X_training, y_training,
+                                                                                       number_of_classes, lambda_for_regularization=0)
+
+        np.testing.assert_array_almost_equal(numerical_grad, back_propagation_grad)
+
 
 
 
