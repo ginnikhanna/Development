@@ -21,6 +21,27 @@ def compute_multivariate_cost_function(X : np.ndarray  , theta : np.ndarray, y:n
     return J_theta
 
 
+def compute_cost_with_regularization(X : np.ndarray,
+                                     theta : np.ndarray,
+                                     y: np.ndarray,
+                                     lambda_regularization : float) -> float:
+
+    '''
+    :param X:np.array with M x N dimensions with M parameters and N training samples
+    :param theta:np.array with M x 1 dimensions
+    :param y:np.array with  1 x N dimensions
+    :return: cost
+    '''
+
+    number_of_training_samples = X.shape[1]
+    theta_for_regularization = theta[1:]
+    cost = (theta.transpose().dot(X) - y).dot((theta.transpose().dot(X) - y).transpose())/(2*number_of_training_samples) \
+           + lambda_regularization/(2 * len(y)) * np.sum(theta_for_regularization **2)
+
+    return cost
+
+
+
 def gradient_descent_univariate (X : np.ndarray  , theta : np.ndarray, y:np.ndarray, number_of_iterations :int, alpha:float) -> tuple:
     '''
 
