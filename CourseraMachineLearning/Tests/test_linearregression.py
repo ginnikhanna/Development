@@ -41,8 +41,35 @@ class Test(unittest.TestCase):
         actual_result = linearregression.compute_cost_with_regularization(X, theta, y, lambda_reg)
         self.assertEqual(expected_result, actual_result)
 
+    def test_compute_gradient_with_regularization_output_for_a_fixed_input_with_zero_regularization(self):
+        """
 
+        Any method which starts with ``test_`` will considered as a test case.
+        """
 
+        X = np.array((1,1)).reshape(2,1)
+        y = np.ones(1)
+        theta = np.array((1,1))
+        lambda_reg = 0
+
+        expected_result = np.ones_like(theta)
+        actual_result = linearregression.compute_gradient_with_regularization(X, theta, y, lambda_reg)
+        np.testing.assert_array_equal(expected_result, actual_result)
+
+    def test_compute_gradient_with_regularization_output_for_a_fixed_input_with_unit_regularization(self):
+        """
+
+        Any method which starts with ``test_`` will considered as a test case.
+        """
+
+        X = np.array((1,1)).reshape(2,1)
+        y = np.ones(1)
+        theta = np.array((1,1))
+        lambda_reg = 1
+
+        expected_result = np.array((1, 2))
+        actual_result = linearregression.compute_gradient_with_regularization(X, theta, y, lambda_reg)
+        np.testing.assert_array_equal(expected_result, actual_result)
 
 
 if __name__ == '__main__':
