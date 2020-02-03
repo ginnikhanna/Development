@@ -5,8 +5,9 @@ import matplotlib.pyplot as plt
 import scipy.io
 
 import pandas as pd
-from CourseraMachineLearning.Utility import linearregression
+from CourseraMachineLearning.Utility import linearregression, diagnostics
 from CourseraMachineLearning.Utility.linearregression import OptimizationAlgo
+
 
 #Load Data
 data = scipy.io.loadmat('ex5data1.mat')
@@ -32,6 +33,12 @@ ones = np.ones((1, X_training.shape[0]))
 X_training = X_training.transpose()
 X_training = np.vstack((ones, X_training))
 y_training = y_training.reshape((1, len(y_training)))
+
+ones = np.ones((1, X_val.shape[0]))
+X_val = X_val.transpose()
+X_val = np.vstack((ones, X_val))
+y_val = y_val.reshape((1, len(y_val)))
+
 lambda_for_regularization = 0
 
 cost = linearregression.compute_cost_with_regularization(theta,
@@ -57,4 +64,15 @@ prediction = optimized_theta.dot(X_training)
 
 plt.figure(1)
 plt.plot(X_training[1], prediction)
+
+
+error_training, error_cross_val = diagnostics.get_training_error(X_training,
+                                                                 y_training,
+                                                                 X_val,
+                                                                 y_val)
+
+plt.figure(2)
+plt.plot(error_training, label = 'Training error')
+plt.plot(error_cross_val, label = 'Cross validation error')
+plt.grid()
 plt.show()
