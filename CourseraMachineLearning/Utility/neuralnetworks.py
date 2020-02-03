@@ -329,7 +329,7 @@ def minimize_cost_and_find_theta_with_optimization(nodes_in_input_layer,
 
     if algo == OptimizationAlgo.MINIMIZE:
         # Advanced minimizing algorithm
-        result = so.minimize(fun=compute_cost(),
+        result = so.minimize(fun=compute_cost,
                              x0=initial_parameters,
                              args=(nodes_in_input_layer, nodes_in_output_layer, X, y, num_of_classes,
                                    lambda_for_regularization),
