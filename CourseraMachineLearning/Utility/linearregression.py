@@ -95,7 +95,7 @@ def minimize_cost_and_find_theta_with_regularization(initial_theta: np.ndarray, 
                             x0 = initial_theta,
                             fprime=compute_gradient_with_regularization,
                             args=(X, y, lambda_for_regularization),
-                            maxiter=50)
+                            maxiter=200)
 
     '''
     fun : function to minimize, in this case it is compute_cost 
@@ -104,6 +104,7 @@ def minimize_cost_and_find_theta_with_regularization(initial_theta: np.ndarray, 
     jac : function to calculate the gradient 
     '''
     return result
+
 
 
 
