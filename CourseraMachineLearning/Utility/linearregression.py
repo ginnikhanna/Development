@@ -1,4 +1,11 @@
 import numpy as np
+import scipy.optimize as so
+from enum import Enum
+
+class OptimizationAlgo(Enum):
+    MINIMIZE = 1
+    FMIN_CG = 2
+
 
 def compute_univariate_cost_function(X : np.ndarray  , theta : np.ndarray, y:np.ndarray) -> float:
 
@@ -12,7 +19,7 @@ def compute_univariate_cost_function(X : np.ndarray  , theta : np.ndarray, y:np.
 def compute_multivariate_cost_function(X : np.ndarray  , theta : np.ndarray, y:np.ndarray) -> float:
 
     ''' X : np.array with  M x N dimensions
-        theta : np.array with M x 1 dimensions
+        theta : np.array with 1 x M dimensions
         y : np.array with  1 x N dimensions
         M : number of parameters
         N : number of training samples
@@ -21,24 +28,82 @@ def compute_multivariate_cost_function(X : np.ndarray  , theta : np.ndarray, y:n
     return J_theta
 
 
-def compute_cost_with_regularization(X : np.ndarray,
-                                     theta : np.ndarray,
+def compute_cost_with_regularization(theta : np.ndarray,
+                                     X : np.ndarray,
                                      y: np.ndarray,
                                      lambda_regularization : float) -> float:
 
     '''
     :param X:np.array with M x N dimensions with M parameters and N training samples
-    :param theta:np.array with M x 1 dimensions
+    :param theta:np.array with 1 x M dimensions
     :param y:np.array with  1 x N dimensions
     :return: cost
     '''
 
     number_of_training_samples = X.shape[1]
     theta_for_regularization = theta[1:]
-    cost = (theta.transpose().dot(X) - y).dot((theta.transpose().dot(X) - y).transpose())/(2*number_of_training_samples) \
+    cost = (theta.dot(X) - y).dot((theta.dot(X) - y).transpose())/(2*number_of_training_samples) \
            + lambda_regularization/(2 * len(y)) * np.sum(theta_for_regularization **2)
 
     return cost
+
+
+def compute_gradient_with_regularization(theta : np.ndarray,
+                                     X : np.ndarray,
+                                     y: np.ndarray,
+                                     lambda_regularization : float) -> float:
+
+    '''
+    :param X:np.array with M x N dimensions with M parameters and N training samples
+    :param theta:np.array with 1 x M dimensions
+    :param y:np.array with  1 x N dimensions
+    :return: gradient with 1 x M dimensions
+    '''
+
+    number_of_training_samples = X.shape[1]
+
+    theta_regularization  = np.hstack((0, theta[1:]))
+    gradient = ((theta.transpose().dot(X) - y).dot(X.transpose()))/number_of_training_samples
+    gradient += (lambda_regularization * theta_regularization)/number_of_training_samples
+
+    gradient = gradient.flatten()
+
+    return gradient
+
+
+
+def minimize_cost_and_find_theta_with_regularization(initial_theta: np.ndarray, X: np.ndarray, y: np.ndarray,
+                                                     lambda_for_regularization, algo: OptimizationAlgo) -> tuple():
+    '''
+       :param initial_theta: np.array with Mx1 dimension
+       :param X: np.array MxN dimension
+       :param y: np.array with 1xN dimension
+       :param lambda_for_regularization
+       :return: optimized parameters thetas
+    '''
+
+    if algo == OptimizationAlgo.MINIMIZE:
+        # Advanced minimizing algorithm
+        result = so.minimize(fun=compute_cost_with_regularization,
+                             x0=initial_theta,
+                             args=(X, y, lambda_for_regularization),
+                             jac=compute_gradient_with_regularization)
+        result = result.x
+
+    if algo == OptimizationAlgo.FMIN_CG:
+        result = so.fmin_cg(f = compute_cost_with_regularization,
+                            x0 = initial_theta,
+                            fprime=compute_gradient_with_regularization,
+                            args=(X, y, lambda_for_regularization),
+                            maxiter=50)
+
+    '''
+    fun : function to minimize, in this case it is compute_cost 
+    x0 : initial value of the variable to be optimized for minimum cost 
+    args : additional arguments to the compute_cost function 
+    jac : function to calculate the gradient 
+    '''
+    return result
 
 
 
