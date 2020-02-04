@@ -14,7 +14,7 @@ def get_training_error(X_training : np.ndarray,
     '''
 
     number_of_samples = X_training.shape[1]
-    initial_theta = np.array((0,0))
+    initial_theta = np.zeros((X_training.shape[0]))
     lambda_for_reg = 0
 
     error_training = []
