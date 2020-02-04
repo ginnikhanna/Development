@@ -149,6 +149,23 @@ def gradient_descent_multivariate(X : np.ndarray  , theta : np.ndarray, y:np.nda
     return theta, J_array[:-1], J_array
 
 
+
+def get_polynomial_feature_matrix_for_univariate_feature_matrix(X: np.ndarray,
+                                                                p : int):
+    '''
+
+    :param X: 1 x N feature matrix
+    :return: X_poly : P x N feature matrix where each row is a pth power of the first row
+    '''
+
+    X_poly = np.zeros((p, X.shape[1]))
+    for i in range(p):
+        X_poly[i, :] = X ** (i + 1)
+
+    return X_poly
+
+
+
 def normalized_features_matrix(X : np.ndarray) -> np.ndarray:
     '''
 
@@ -165,7 +182,7 @@ def normalized_features_matrix(X : np.ndarray) -> np.ndarray:
     X = (X.transpose() - mu)/sigma
     X = X.transpose()
 
-    return X, mu, sigma
+    return X
 
 def parameters_from_normal_equation(X :np.ndarray, y:np.ndarray):
     '''
