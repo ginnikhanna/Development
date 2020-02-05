@@ -20,7 +20,7 @@ def compute_multivariate_cost_function(X : np.ndarray  , theta : np.ndarray, y:n
 
     ''' X : np.array with  M x N dimensions
         theta : np.array with 1 x M dimensions
-        y : np.array with  1 x N dimensions
+        y : np.array with  N x 1 dimensions
         M : number of parameters
         N : number of training samples
     '''
@@ -36,7 +36,7 @@ def compute_cost_with_regularization(theta : np.ndarray,
     '''
     :param X:np.array with M x N dimensions with M parameters and N training samples
     :param theta:np.array with 1 x M dimensions
-    :param y:np.array with  1 x N dimensions
+    :param y:np.array with  N x 1 dimensions
     :return: cost
     '''
 
@@ -45,6 +45,7 @@ def compute_cost_with_regularization(theta : np.ndarray,
     cost = (theta.dot(X) - y).dot((theta.dot(X) - y).transpose())/(2*number_of_training_samples) \
            + lambda_regularization/(2 * len(y)) * np.sum(theta_for_regularization **2)
 
+    #print (f'Cost : {cost}')
     return cost
 
 
@@ -56,19 +57,18 @@ def compute_gradient_with_regularization(theta : np.ndarray,
     '''
     :param X:np.array with M x N dimensions with M parameters and N training samples
     :param theta:np.array with 1 x M dimensions
-    :param y:np.array with  1 x N dimensions
+    :param y:np.array with  N x 1 dimensions
     :return: gradient with 1 x M dimensions
     '''
 
     number_of_training_samples = X.shape[1]
 
     theta_regularization  = np.hstack((0, theta[1:]))
-    gradient = ((theta.transpose().dot(X) - y).dot(X.transpose()))/number_of_training_samples
-    gradient += (lambda_regularization * theta_regularization)/number_of_training_samples
+    gradients = ((theta.transpose().dot(X) - y).dot(X.transpose()))/number_of_training_samples + (lambda_regularization * theta_regularization)/number_of_training_samples
 
-    gradient = gradient.flatten()
+    #print(f'Gradients : {gradients}')
 
-    return gradient
+    return gradients
 
 
 
@@ -77,7 +77,7 @@ def minimize_cost_and_find_theta_with_regularization(initial_theta: np.ndarray, 
     '''
        :param initial_theta: np.array with Mx1 dimension
        :param X: np.array MxN dimension
-       :param y: np.array with 1xN dimension
+       :param y: np.array with N x 1 dimension
        :param lambda_for_regularization
        :return: optimized parameters thetas
     '''
@@ -95,7 +95,7 @@ def minimize_cost_and_find_theta_with_regularization(initial_theta: np.ndarray, 
                             x0 = initial_theta,
                             fprime=compute_gradient_with_regularization,
                             args=(X, y, lambda_for_regularization),
-                            maxiter=200)
+                            maxiter= 200)
 
     '''
     fun : function to minimize, in this case it is compute_cost 
@@ -113,7 +113,7 @@ def gradient_descent_univariate (X : np.ndarray  , theta : np.ndarray, y:np.ndar
 
     :param X: np.array with  2 x N dimensions
     :param theta: np.array with 2 x 1 dimensions
-    :param y: np.array with  1 x N dimensions
+    :param y: np.array with  N x 1 dimensions
     :param number_of_iterations:
     :param alpha: learning rate
     :return:
@@ -182,7 +182,7 @@ def normalized_features_matrix(X : np.ndarray) -> np.ndarray:
     X = (X.transpose() - mu)/sigma
     X = X.transpose()
 
-    return X
+    return X, mu, sigma
 
 def parameters_from_normal_equation(X :np.ndarray, y:np.ndarray):
     '''
