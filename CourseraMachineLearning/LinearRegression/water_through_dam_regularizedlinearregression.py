@@ -3,6 +3,7 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import scipy.io
+from scipy.interpolate import interp1d
 
 import pandas as pd
 from CourseraMachineLearning.Utility import linearregression, diagnostics
@@ -32,12 +33,15 @@ theta = np.array((1,1))
 ones = np.ones((1, X_training_raw.shape[0]))
 X_training = X_training_raw.transpose()
 X_training = np.vstack((ones, X_training))
-y_training = y_training.reshape((1, len(y_training)))
+y_training = y_training.flatten()
+#y_training = y_training.reshape((1, len(y_training)))
 
 ones = np.ones((1, X_val_raw.shape[0]))
 X_val = X_val_raw.transpose()
 X_val = np.vstack((ones, X_val))
-y_val = y_val.reshape((1, len(y_val)))
+y_val = y_val.flatten()
+
+#y_val = y_val.reshape((1, len(y_val)))
 
 lambda_for_regularization = 0
 
@@ -69,7 +73,8 @@ plt.plot(X_training[1], prediction)
 error_training, error_cross_val = diagnostics.get_training_error(X_training,
                                                                  y_training,
                                                                  X_val,
-                                                                 y_val)
+                                                                 y_val,
+                                                                 lambda_for_regularization)
 
 plt.figure(2)
 plt.plot(error_training, label = 'Training error')
@@ -91,27 +96,43 @@ X_poly_val = np.vstack((ones, X_poly_val))
 
 initial_theta = np.zeros((X_poly_training.shape[0]))
 
-optimized_theta = linearregression.minimize_cost_and_find_theta_with_regularization(initial_theta,
-                                                                                    X_poly_training,
-                                                                                    y_training,
-                                                                                    lambda_for_regularization,
-                                                                                    OptimizationAlgo.FMIN_CG)
+lambda_for_regularization = [0, 1, 3]
 
-prediction_poly = optimized_theta.dot(X_poly_training)
+plt.figure(3)
+X_training_plot = np.linspace(X_training[1].min(), X_training[1].max(), 100)
+f = interp1d(X_training[1], y_training, kind='quadratic')
+y_training_plot = f(X_training_plot)
 
-plt.figure(1)
-plt.scatter(X_training[1], prediction_poly)
+plt.plot(X_training_plot, y_training_plot, label='Training Data', marker='x', linestyle='--')
+for lambda_for_regularization_i in lambda_for_regularization:
+
+    optimized_theta = linearregression.minimize_cost_and_find_theta_with_regularization(initial_theta,
+                                                                                        X_poly_training,
+                                                                                        y_training,
+                                                                                        lambda_for_regularization_i,
+                                                                                        OptimizationAlgo.FMIN_CG)
+
+    prediction_poly = optimized_theta.dot(X_poly_training)
+
+    plt.figure(3)
+    plt.scatter(X_training[1], prediction_poly, label = f'Poly fit with lambda = {lambda_for_regularization_i}', linestyle = '--')
+    plt.grid()
+    plt.legend()
 
 
-error_training_poly, error_cross_val_poly = diagnostics.get_training_error(X_poly_training,
-                                                                 y_training,
-                                                                 X_poly_val,
-                                                                 y_val)
+    error_training_poly, error_cross_val_poly = diagnostics.get_training_error(X_poly_training,
+                                                                     y_training,
+                                                                     X_poly_val,
+                                                                     y_val,
+                                                                     lambda_for_regularization_i)
 
-plt.figure(2)
-plt.plot(error_training_poly, label = 'Training error with polynomial regression')
-plt.plot(error_cross_val_poly, label = 'Cross validation error with polynomial regression')
-plt.grid()
-plt.legend()
+    plt.figure(4)
+    plt.plot(error_training_poly, label = f'Training error with polynomial regression with lambda = {lambda_for_regularization_i}', linestyle = '--')
+    plt.plot(error_cross_val_poly, label = f'Cross validation error with polynomial regression = {lambda_for_regularization_i}')
+    plt.grid()
+    plt.legend()
+
 plt.show()
+
+
 
